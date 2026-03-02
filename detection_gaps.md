@@ -1,25 +1,26 @@
-## Detection Gap: Scheduled Task Creation (Event ID 4698)
+## Detection Gap: Scheduled Task Creation (Event ID 4698 + Sysmon Process Execution)
 
-**Status:** Not Detected
+**Status:** Event Logged, No Alert
 
 **What I Did:**
-- Enabled Windows auditing for scheduled task creation
-- Created a scheduled task via schtasks command
-- Event ID 4698 was logged in Security Event Viewer
+- Created scheduled task via schtasks command
+- Event ID 4698 logged in Security Event Viewer
+- Sysmon Event ID 1 captured schtasks.exe execution
 
 **What Wazuh Did:**
-- Agent collected the event (4698 is not in exclusion list)
-- No alert fired
+- Agent collected both events
+- Zero alerts fired
 
 **Root Cause:**
-- Wazuh Manager has no rule for Event ID 4698
-- Default ruleset does not detect scheduled task creation
+- No Wazuh rule for Event ID 4698
+- No Wazuh rule for schtasks.exe process execution detection
 
 **Impact:**
-- Scheduled task persistence attacks (T1053) would go undetected in this lab
+- Scheduled task persistence (T1053) completely undetected
 
 **Next Steps:**
-- Write custom Wazuh rule for Event ID 4698
-- Or add to higher-priority detection after covering critical gaps
+- Write custom rule for schtasks.exe execution, OR
+- Write custom rule for Event ID 4698, OR
+- Prioritize after higher-severity gaps
 
-**Date:** March 2, 2026
+**Date:** March 3, 2026
