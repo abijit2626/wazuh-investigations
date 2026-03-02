@@ -24,3 +24,31 @@
 - Prioritize after higher-severity gaps
 
 **Date:** March 3, 2026
+
+
+## Detection Gap: Credentials Exposed in Command Line (T1552)
+
+**Status:** Command Executed, No Alert
+
+**What I Did:**
+- Created user account with password visible in command line
+- net user testpass Password123456! /add
+- Sysmon captured the full command
+
+**What Wazuh Did:**
+- Agent collected the event
+- Zero alerts fired
+
+**Root Cause:**
+- No Wazuh rule detecting plaintext credentials in command lines
+- No pattern matching for common credential exposure patterns
+
+**Impact:**
+- Defenders can't detect when credentials leak into logs/commands
+- Attackers exposing credentials through CLI go undetected
+
+**Next Steps:**
+- Write rule detecting common password patterns in command lines
+- Or create rule for "net user" commands with suspicious formatting
+
+**Date:** March 3, 2026
