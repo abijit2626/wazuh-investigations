@@ -25,6 +25,35 @@
 
 **Date:** March 3, 2026
 
+## Detection Gap: Suspicious PowerShell Execution (T1059)
+
+**Status:** Process Captured by Sysmon, No Alert
+
+**What I Did:**
+- Executed PowerShell with suspicious flags: -NoProfile -ExecutionPolicy Bypass
+- Command targeted lsass process (credential dumping pattern)
+- Sysmon Event ID 1 captured full execution details
+
+**What Wazuh Did:**
+- Agent collected the Sysmon event
+- Zero alerts fired
+
+**Root Cause:**
+- No Wazuh rule for suspicious PowerShell command lines
+- No detection for -ExecutionPolicy Bypass pattern
+- No detection for lsass targeting
+
+**Impact:**
+- PowerShell-based attacks (malware execution, credential theft) undetected
+- Bypass flags not flagged as suspicious
+
+**Next Steps:**
+- Write custom rule detecting ExecutionPolicy Bypass
+- Or detect PowerShell + suspicious command patterns
+- High priority (PowerShell is heavily used in attacks)
+
+**Date:** March 3, 2026
+
 
 ## Detection Gap: Credentials Exposed in Command Line (T1552)
 
