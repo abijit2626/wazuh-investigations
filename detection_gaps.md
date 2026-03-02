@@ -25,6 +25,9 @@
 
 **Date:** March 3, 2026
 
+
+
+
 ## Detection Gap: Suspicious PowerShell Execution (T1059)
 
 **Status:** Process Captured by Sysmon, No Alert
@@ -55,29 +58,31 @@
 **Date:** March 3, 2026
 
 
-## Detection Gap: Credentials Exposed in Command Line (T1552)
 
-**Status:** Command Executed, No Alert
+
+## Detection Gap: Plaintext Credentials in Command Line (T1552)
+
+**Status:** Command Executed and Logged, No Alert
 
 **What I Did:**
-- Created user account with password visible in command line
-- net user testpass Password123456! /add
-- Sysmon captured the full command
+- Created user account with plaintext password in command: net user testpass Password123456! /add
+- Sysmon Event ID 1 captured the full command with password visible
+- Windows Event ID 4720 (account created) logged
 
 **What Wazuh Did:**
-- Agent collected the event
-- Zero alerts fired
+- Alerted on Event 4720 (account creation)
+- Did NOT alert on plaintext credential exposure in command line
 
 **Root Cause:**
-- No Wazuh rule detecting plaintext credentials in command lines
-- No pattern matching for common credential exposure patterns
+- Wazuh has rules for account events (4720, 4722, etc.)
+- No rule for detecting plaintext credentials/passwords in command lines
 
 **Impact:**
-- Defenders can't detect when credentials leak into logs/commands
-- Attackers exposing credentials through CLI go undetected
+- Defenders miss credential leakage in logs
+- Credentials exposed via CLI go undetected
 
 **Next Steps:**
-- Write rule detecting common password patterns in command lines
-- Or create rule for "net user" commands with suspicious formatting
+- Write rule detecting common password patterns in net.exe commands
+- Or create generic rule for credential patterns in any command line
 
 **Date:** March 3, 2026
