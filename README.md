@@ -48,13 +48,6 @@ Each gap includes:
 4. If alert fires → investigate for false positives
 5. Map to MITRE ATT&CK framework
 
-## Next Steps
-
-- [ ] Ubuntu agent baseline testing
-- [ ] Write custom rules for high-priority gaps
-- [ ] Test rule effectiveness
-- [ ] Document tuning process
-
 ## Why This Matters
 
 Most SIEM tutorials show you how to *install* the tool. This shows you how to actually *use* it—what's broken, what needs tuning, and how to fix it.
