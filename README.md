@@ -1,57 +1,56 @@
-# Wazuh SIEM Detection Engineering
+# Full SOC Home Lab & Detection Engineering
 
-Testing and documenting Wazuh SIEM capabilities, detection gaps, and custom rule development.
+This repository has evolved from a standalone detection engineering project into a **Full SOC Home Lab Simulation**. 
+It combines a stateful adversary telemetry generator with hands-on SIEM investigations, allowing me to both simulate realistic cyber attacks and investigate them exactly as a SOC analyst would.
 
-## What This Is
+## 🏗 Architecture Overview
 
-Real-world testing of Wazuh's out-of-the-box detection rules against common attack techniques. I'm documenting what works, what doesn't, and building custom rules to fill the gaps.
+The project is split into two primary domains: **Simulation** and **Investigations**.
 
-**Current Setup:**
-- Wazuh Manager (version TBD)
-- Windows Agent (Sysmon configured)
-- Ubuntu Agent (new)
-
-## Repository Structure
 ```
-stem_writeups/
-├── Windows/
-│   ├── Detection_gaps/     # Missing detections + root cause analysis
-│   └── Investigations/      # Alert triage & false positive analysis
-└── Ubuntu/
-    └── (in progress)
+wazuh-investigations/
+├── simulation/           # The Stateful Adversary Telemetry Generator (Python)
+│   ├── core/             # Canonical event schemas, context, and bus
+│   ├── generators/       # Stateful event generators (Auth, Process, etc.)
+│   ├── adapters/         # Output adapters (Wazuh, JSON debug)
+│   ├── tests/            # Test suite
+│   ├── config.yaml       # Tunable scenario configurations
+│   └── main.py           # Scenario orchestrator
+└── investigations/       # Alert Triage, Detection Gaps & Writeups
+    ├── Windows/          # Windows endpoint analysis
+    └── Ubuntu/           # Linux endpoint analysis
 ```
 
-## What's Documented
+### 1. The Simulation Engine (`/simulation`)
+A Python-based stateful attack simulation engine. Unlike random log generators, this tool simulates realistic attack scenarios (e.g., T1110.001 Brute Force + T1003.001 LSASS dumping) and generates chronological, context-aware telemetry directly into Wazuh.
 
-### Windows Agent
+- **Stateful Context**: Tracks which users and hosts are compromised.
+- **MITRE Aligned**: All events map strictly to MITRE ATT&CK techniques and tactics.
+- **Wazuh Ready**: Outputs `ndjson` specifically formatted for Wazuh localfile ingestion.
 
-**Detection Gaps Found:**
-- Scheduled Task Creation (T1053) - Event ID 4698 logged but not alerted
-- Suspicious PowerShell Execution (T1059) - Bypass flags undetected
-- Plaintext Credentials in Command Lines (T1552) - Password exposure missed
+### 2. The Investigations (`/investigations`)
+Real-world testing of Wazuh's out-of-the-box detection rules against the simulated attacks (as well as other common techniques). 
 
-**Investigations:**
-- NTFS Alternate Data Streams (Rule 510) - False positive analysis
+- **Detection Gaps**: Finding missing detections (e.g., Scheduled tasks, PowerShell execution) and creating custom rules.
+- **Alert Triage**: False positive analysis and root cause investigation.
+- **Cross-Platform**: Covers both Windows (with Sysmon) and Ubuntu.
 
-Each gap includes:
-- Attack simulation details
-- What Wazuh detected vs. missed
-- Root cause (missing rule/misconfiguration)
-- MITRE ATT&CK mapping
-- Proposed fix
+## 🚀 Getting Started
 
-## Testing Methodology
+### Running the Simulator
+```bash
+cd simulation
+pip install -r requirements.txt
+python main.py
+```
+This generates the scenario output logs (`wazuh_sim.log` and `debug.log`) in the `simulation/output` directory, ready to be ingested by the Wazuh Agent.
 
-1. Execute attack technique
-2. Check if Wazuh alerts
-3. If no alert → document as detection gap
-4. If alert fires → investigate for false positives
-5. Map to MITRE ATT&CK framework
+## 💡 Why This Matters
 
-## Why This Matters
-
-Most SIEM tutorials show you how to *install* the tool. This shows you how to actually *use* it—what's broken, what needs tuning, and how to fix it.
+Most SIEM tutorials show you how to *install* the tool. This project takes it further:
+1. **Red Team (Simulation):** How to generate high-fidelity, interconnected adversary telemetry.
+2. **Blue Team (Investigation):** How to actually *use* the SIEM to triage alerts, fix broken rules, and analyze false positives.
 
 ---
 
-**Note:** This is a learning project. Detection rules are works in progress and not production-ready.
+**Note:** This is a learning project. The detection rules and simulation engine are works in progress and are continuously being expanded.

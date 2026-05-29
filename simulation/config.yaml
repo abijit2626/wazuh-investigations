@@ -1,0 +1,60 @@
+# SOC Lab - Adversary Telemetry Generator Configuration
+# Phase 1: Stateful attack simulation engine
+
+simulation:
+  output_dir: "output"
+  wazuh_log: "output/wazuh_sim.log"
+  debug_log: "output/debug.log"
+  max_file_size_mb: 50
+
+scenario:
+  brute_force:
+    src_ip: "185.220.101.47"
+    target_user: "jsmith"
+    target_host: "DESKTOP-W11LAB"
+    failure_count: 50
+    spread_minutes: 8
+    jitter_sigma_seconds: 12
+    success_delay_seconds: 45
+    process_delay_seconds: 30
+    mitre_technique: "T1110.001"
+    mitre_tactic: "Credential Access"
+    lsass_technique: "T1003.001"
+    lsass_tactic: "Credential Access"
+
+ai:
+  inject_rate: 0.15
+  model: "claude-sonnet-4-20250514"
+  max_tokens: 1000
+  content_pool_size: 50
+  content_pool_refill_threshold: 20
+  fp_pool_size: 20
+
+rate_limiter:
+  events_per_second: 500
+
+pipeline:
+  raw_queue_maxsize: 500
+  output_queue_maxsize: 200
+  thread_pool_workers: 2
+
+hosts:
+  - name: "DESKTOP-W11LAB"
+    ip: "192.168.1.100"
+    os: "Windows 11"
+
+users:
+  - username: "jsmith"
+    domain: "LAB"
+    role: "user"
+  - username: "admin"
+    domain: "LAB"
+    role: "admin"
+  - username: "svc_backup"
+    domain: "LAB"
+    role: "service"
+
+attacker:
+  src_ip: "185.220.101.47"
+  geo: "Netherlands"
+  isp: "Tor Exit Node"
