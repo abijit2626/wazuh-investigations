@@ -31,9 +31,9 @@ A Python-based stateful attack simulation engine. Unlike random log generators, 
 ### 2. The Investigations (`/investigations`)
 Real-world testing of Wazuh's out-of-the-box detection rules against the simulated attacks (as well as other common techniques). 
 
-- **Detection Gaps**: Finding missing detections (e.g., Scheduled tasks, PowerShell execution) and creating custom rules.
+- **Detection Gaps**: Finding missing detections (scheduled task creation, suspicious PowerShell execution, plaintext credentials on the command line) and documenting the root cause, impact, and the custom rule needed to close each one.
 - **Alert Triage**: False positive analysis and root cause investigation.
-- **Cross-Platform**: Covers both Windows (with Sysmon) and Ubuntu.
+- **Platforms**: Windows endpoint analysis with Sysmon. Ubuntu is scaffolded but not yet written up.
 
 ## 🚀 Getting Started
 
